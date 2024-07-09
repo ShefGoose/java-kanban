@@ -1,15 +1,17 @@
+package entity;
+
 import java.util.Objects;
 
 public class Subtask extends Task {
-    protected int epicId;
+    private int epicId;
 
     public Subtask(String name, Status status, String description, int id, int epicId) {
         super(name, status, description, id);
         this.epicId = epicId;
     }
 
-    public Subtask(String name, Status status, String description, int epicId) {
-        super(name, status, description);
+    public Subtask(String name, String description, int epicId) {
+        super(name, description);
         this.epicId = epicId;
     }
 
@@ -29,7 +31,7 @@ public class Subtask extends Task {
 
     @Override
     public String toString() {
-        return "Subtask{" +
+        return "objects.Subtask{" +
                 "epicId=" + epicId +
                 "} \n " + super.toString();
     }

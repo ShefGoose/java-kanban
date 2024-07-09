@@ -1,15 +1,21 @@
+package entity;
+
 import java.util.ArrayList;
 import java.util.Objects;
 
 public class Epic extends Task {
-    protected ArrayList<Integer> subtaskIds = new ArrayList<>();
+    private ArrayList<Integer> subtaskIds = new ArrayList<>();
 
     public Epic(String name, Status status, String description, int id) {
         super(name, status, description, id);
     }
 
-    public Epic(String name, Status status, String description) {
-        super(name, status, description);
+    public Epic(String name, String description) {
+        super(name, description);
+    }
+
+    public ArrayList<Integer> getSubtaskIds() {
+        return subtaskIds;
     }
 
     @Override
@@ -29,7 +35,7 @@ public class Epic extends Task {
 
     @Override
     public String toString() {
-        return "Epic{" +
+        return "objects.Epic{" +
                 "subtaskIds=" + subtaskIds +
                 "} \n " + super.toString();
     }

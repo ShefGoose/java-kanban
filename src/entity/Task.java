@@ -1,10 +1,12 @@
+package entity;
+
 import java.util.Objects;
 
 public class Task {
-    private String name;
-    private Status status;
-    private String description;
-    private int id;
+    protected String name;
+    protected Status status;
+    protected String description;
+    protected int id;
 
     public Task(String name, Status status, String description, int id) {
         this.name = name;
@@ -13,9 +15,9 @@ public class Task {
         this.id = id;
     }
 
-    public Task(String name, Status status, String description) {
+    public Task(String name, String description) {
         this.name = name;
-        this.status = status;
+        this.status = Status.NEW;
         this.description = description;
     }
 
@@ -60,12 +62,13 @@ public class Task {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Task task = (Task) o;
-        return id == task.id && Objects.equals(name, task.name) && Objects.equals(status, task.status) && Objects.equals(description, task.description);
+        return id == task.id && Objects.equals(name, task.name) && Objects.equals(status, task.status)
+                && Objects.equals(description, task.description);
     }
 
     @Override
     public String toString() {
-        return "Task{" +
+        return "objects.Task{" +
                 "name='" + name + '\'' +
                 ", status='" + status + '\'' +
                 ", description='" + description + '\'' +
