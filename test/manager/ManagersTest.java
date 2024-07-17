@@ -8,7 +8,7 @@ class ManagersTest {
 
     @Test
     void getDefaultShouldReturnNotNull() {
-       assertNotNull(Managers.getDefault());
+        assertNotNull(Managers.getDefault());
     }
 
     @Test
