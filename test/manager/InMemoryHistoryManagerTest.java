@@ -34,12 +34,13 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    void shouldRemoveFirstTaskIfSizeHistoryOverMaxSize() {
+    void shouldRemoveTaskIfItIsAlreadyInTheList() {
+        historyManager.add(task);
         historyManager.add(epic);
-        for (int i = 0; i < 10; i++) {
-            historyManager.add(task);
-        }
-        assertEquals(historyManager.getHistory().getFirst(), task);
+        historyManager.add(subtask);
+        historyManager.add(task);
+        assertEquals(historyManager.getHistory().getFirst(), epic);
+        assertEquals(historyManager.getHistory().getLast(), task);
     }
 
     @Test

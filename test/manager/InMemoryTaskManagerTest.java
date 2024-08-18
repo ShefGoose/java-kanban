@@ -106,6 +106,14 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
+    void shouldRemoveSubtaskInHistoryIfDeleteHisEpic() {
+        manager.getEpic(epicId);
+        manager.getSubtask(subtaskId);
+        manager.deleteEpic(epicId);
+        assertTrue(manager.getHistory().isEmpty());
+    }
+
+    @Test
     void shouldDeleteAllTasks() {
         manager.deleteTasks();
         manager.deleteEpics();
@@ -141,7 +149,7 @@ class InMemoryTaskManagerTest {
         manager.getTask(taskId);
         manager.getEpic(epicId);
         manager.getSubtask(subtaskId);
-        assertEquals(4, manager.getHistory().size());
+        assertEquals(3, manager.getHistory().size());
         assertTrue(manager.getHistory().contains(task));
         assertTrue(manager.getHistory().contains(epic));
         assertTrue(manager.getHistory().contains(subtask));
