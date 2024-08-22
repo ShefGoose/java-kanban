@@ -76,8 +76,7 @@ class InMemoryTaskManagerTest {
     void mustEqualTasksWithSameId() {
         final Task taskUpdate = new Task("OtherName", Status.DONE, "OtherDescription", task.getId());
         final Epic epicUpdate = new Epic("OtherName", Status.NEW, "OtherDescription", epic.getId());
-        final Subtask subtaskUpdate = new Subtask("OtherName", Status.NEW, "OtherDescription",
-                subtask.getId(), epic.getId());
+        final Subtask subtaskUpdate = new Subtask("OtherName", Status.NEW, "OtherDescription", subtask.getId(), epic.getId());
         assertEquals(task, taskUpdate, "Задачи не совпадают");
         assertEquals(epic, epicUpdate, "Задачи не совпадают");
         assertEquals(subtask, subtaskUpdate, "Задачи не совпадают");

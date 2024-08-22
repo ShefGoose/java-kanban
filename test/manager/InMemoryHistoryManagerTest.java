@@ -44,6 +44,51 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
+    void shouldRemoveTaskFromBeginningHistory() {
+        historyManager.add(task);
+        historyManager.add(epic);
+        historyManager.add(subtask);
+        historyManager.remove(task.getId());
+        assertEquals(historyManager.getHistory().getFirst(), epic);
+        assertEquals(historyManager.getHistory().getLast(), subtask);
+    }
+
+    @Test
+    void shouldRemoveTaskFromMiddleHistory() {
+        historyManager.add(task);
+        historyManager.add(epic);
+        historyManager.add(subtask);
+        historyManager.remove(epic.getId());
+        assertEquals(historyManager.getHistory().getFirst(), task);
+        assertEquals(historyManager.getHistory().getLast(), subtask);
+    }
+
+    @Test
+    void shouldRemoveTaskFromEndHistory() {
+        historyManager.add(task);
+        historyManager.add(epic);
+        historyManager.add(subtask);
+        historyManager.remove(subtask.getId());
+        assertEquals(historyManager.getHistory().getFirst(), task);
+        assertEquals(historyManager.getHistory().getLast(), epic);
+    }
+
+    @Test
+    void shouldRemoveSingleTaskFromHistory() {
+        historyManager.add(task);
+        historyManager.remove(task.getId());
+        assertTrue(historyManager.getHistory().isEmpty());
+    }
+
+    @Test
+    void removeFromEmptyHistory() {
+        historyManager.remove(task.getId());
+        historyManager.remove(epic.getId());
+        historyManager.remove(subtask.getId());
+        assertTrue(historyManager.getHistory().isEmpty());
+    }
+
+    @Test
     void shouldSavePreviousVersionTaskInHistory() {
         TaskManager manager = Managers.getDefault();
         Task OtherTask = new Task("OtherName", "OtherDescription");
