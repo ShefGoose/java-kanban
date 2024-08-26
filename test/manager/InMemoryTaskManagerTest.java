@@ -76,8 +76,7 @@ class InMemoryTaskManagerTest {
     void mustEqualTasksWithSameId() {
         final Task taskUpdate = new Task("OtherName", Status.DONE, "OtherDescription", task.getId());
         final Epic epicUpdate = new Epic("OtherName", Status.NEW, "OtherDescription", epic.getId());
-        final Subtask subtaskUpdate = new Subtask("OtherName", Status.NEW, "OtherDescription",
-                subtask.getId(), epic.getId());
+        final Subtask subtaskUpdate = new Subtask("OtherName", Status.NEW, "OtherDescription", subtask.getId(), epic.getId());
         assertEquals(task, taskUpdate, "Задачи не совпадают");
         assertEquals(epic, epicUpdate, "Задачи не совпадают");
         assertEquals(subtask, subtaskUpdate, "Задачи не совпадают");
@@ -103,6 +102,14 @@ class InMemoryTaskManagerTest {
         assertTrue(manager.getSubtasks().isEmpty());
         assertTrue(manager.getEpic(epicId).getSubtaskIds().isEmpty());
 
+    }
+
+    @Test
+    void shouldRemoveSubtaskInHistoryIfDeleteHisEpic() {
+        manager.getEpic(epicId);
+        manager.getSubtask(subtaskId);
+        manager.deleteEpic(epicId);
+        assertTrue(manager.getHistory().isEmpty());
     }
 
     @Test
@@ -141,7 +148,7 @@ class InMemoryTaskManagerTest {
         manager.getTask(taskId);
         manager.getEpic(epicId);
         manager.getSubtask(subtaskId);
-        assertEquals(4, manager.getHistory().size());
+        assertEquals(3, manager.getHistory().size());
         assertTrue(manager.getHistory().contains(task));
         assertTrue(manager.getHistory().contains(epic));
         assertTrue(manager.getHistory().contains(subtask));
