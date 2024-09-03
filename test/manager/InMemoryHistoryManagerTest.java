@@ -7,6 +7,8 @@ import entity.Task;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class InMemoryHistoryManagerTest {
@@ -39,8 +41,7 @@ class InMemoryHistoryManagerTest {
         historyManager.add(epic);
         historyManager.add(subtask);
         historyManager.add(task);
-        assertEquals(historyManager.getHistory().getFirst(), epic);
-        assertEquals(historyManager.getHistory().getLast(), task);
+        assertEquals(List.of(epic, subtask, task), historyManager.getHistory());
     }
 
     @Test
@@ -49,8 +50,7 @@ class InMemoryHistoryManagerTest {
         historyManager.add(epic);
         historyManager.add(subtask);
         historyManager.remove(task.getId());
-        assertEquals(historyManager.getHistory().getFirst(), epic);
-        assertEquals(historyManager.getHistory().getLast(), subtask);
+        assertEquals(List.of(epic, subtask), historyManager.getHistory());
     }
 
     @Test
@@ -59,8 +59,7 @@ class InMemoryHistoryManagerTest {
         historyManager.add(epic);
         historyManager.add(subtask);
         historyManager.remove(epic.getId());
-        assertEquals(historyManager.getHistory().getFirst(), task);
-        assertEquals(historyManager.getHistory().getLast(), subtask);
+        assertEquals(List.of(task, subtask), historyManager.getHistory());
     }
 
     @Test
@@ -69,8 +68,7 @@ class InMemoryHistoryManagerTest {
         historyManager.add(epic);
         historyManager.add(subtask);
         historyManager.remove(subtask.getId());
-        assertEquals(historyManager.getHistory().getFirst(), task);
-        assertEquals(historyManager.getHistory().getLast(), epic);
+        assertEquals(List.of(task, epic), historyManager.getHistory());
     }
 
     @Test
