@@ -7,25 +7,23 @@ public class Task {
     protected Status status;
     protected String description;
     protected int id;
-    protected TaskType taskType;
+
 
     public Task(String name, Status status, String description, int id) {
         this.name = name;
         this.status = status;
         this.description = description;
         this.id = id;
-        this.taskType = TaskType.TASK;
     }
 
     public Task(String name, String description) {
         this.name = name;
         this.status = Status.NEW;
         this.description = description;
-        this.taskType = TaskType.TASK;
     }
 
     public TaskType getTaskType() {
-        return taskType;
+        return TaskType.TASK;
     }
 
     public String getName() {
@@ -66,7 +64,7 @@ public class Task {
 
     @Override
     public String toString() {
-        return "TaskType='" + taskType + '\'' +
+        return "TaskType='" + getTaskType() + '\'' +
                 ", name='" + name + '\'' +
                 ", status='" + status + '\'' +
                 ", description='" + description + '\'' +

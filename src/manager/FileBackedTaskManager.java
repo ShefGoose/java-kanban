@@ -6,6 +6,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 
 import exception.ManagerSaveException;
+import utility.reformCSV;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
     private final File file;
@@ -14,47 +15,13 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         this.file = file;
     }
 
-    protected String toString(Task task) {
-        String[] taskCSVFormat = {String.valueOf(task.getId()),
-                String.valueOf(task.getTaskType()),
-                task.getName(),
-                String.valueOf(task.getStatus()),
-                task.getDescription(),
-                getEpicId(task)
-        };
-        return String.join(",", taskCSVFormat);
-    }
-
-    protected String getEpicId(Task task) {
-        if (task instanceof Subtask) {
-            return String.valueOf(((Subtask) task).getEpicId());
-        }
-        return " ";
-    }
-
-    protected static Task fromString(String value) {
-        String[] taskFromString = value.split(",");
-        if (taskFromString[1].equals("TASK")) {
-            return new Task(taskFromString[2], Status.valueOf(taskFromString[3]), taskFromString[4],
-                    Integer.parseInt(taskFromString[0]));
-        } else if (taskFromString[1].equals("EPIC")) {
-            return new Epic(taskFromString[2], Status.valueOf(taskFromString[3]), taskFromString[4],
-                    Integer.parseInt(taskFromString[0]));
-        } else {
-            return new Subtask(taskFromString[2], Status.valueOf(taskFromString[3]), taskFromString[4],
-                    Integer.parseInt(taskFromString[0]), Integer.parseInt(taskFromString[5]));
-        }
-    }
-
     private void addTask(Task task) {
-        if (task instanceof Epic) {
+        if (task.getTaskType().equals(TaskType.EPIC)) {
             epics.put(task.getId(), (Epic) task);
-        } else if (task instanceof Subtask) {
+        } else if (task.getTaskType().equals(TaskType.SUBTASK)) {
             subtasks.put(task.getId(), (Subtask) task);
-        } else if (task != null) {
-            tasks.put(task.getId(), task);
         } else {
-            System.out.println("Это не задача!");
+            tasks.put(task.getId(), task);
         }
     }
 
@@ -65,7 +32,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             br.readLine();
             while (br.ready()) {
                 String line = br.readLine();
-                Task task = fromString(line);
+                Task task = reformCSV.fromString(line);
                 returnManager.addTask(task);
                 if (task.getId() > newGenerateId) {
                     newGenerateId = task.getId();
@@ -88,13 +55,13 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         try (FileWriter writer = new FileWriter(file, StandardCharsets.UTF_8)) {
             writer.write("id,type,name,status,description,epic\n");
             for (Task task : getTasks()) {
-                writer.write(toString(task) + "\n");
+                writer.write(reformCSV.toString(task) + "\n");
             }
             for (Task task : getEpics()) {
-                writer.write(toString(task) + "\n");
+                writer.write(reformCSV.toString(task) + "\n");
             }
             for (Task task : getSubtasks()) {
-                writer.write(toString(task) + "\n");
+                writer.write(reformCSV.toString(task) + "\n");
             }
         } catch (IOException e) {
             throw new ManagerSaveException("Ошибка при сохранении файла!", e);
