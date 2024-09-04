@@ -2,7 +2,7 @@ package utility;
 
 import entity.*;
 
-public class reformCSV {
+public class reformCsv {
     public static String toString(Task task) {
         String[] taskCSVFormat = {String.valueOf(task.getId()),
                 String.valueOf(task.getTaskType()),
