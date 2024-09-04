@@ -21,6 +21,7 @@ public class Epic extends Task {
     public boolean isEpic() {
         return true;
     }
+
     @Override
     public TaskType getTaskType() {
         return TaskType.EPIC;
