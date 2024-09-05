@@ -8,6 +8,7 @@ public class Task {
     protected String description;
     protected int id;
 
+
     public Task(String name, Status status, String description, int id) {
         this.name = name;
         this.status = status;
@@ -19,6 +20,10 @@ public class Task {
         this.name = name;
         this.status = Status.NEW;
         this.description = description;
+    }
+
+    public TaskType getTaskType() {
+        return TaskType.TASK;
     }
 
     public String getName() {
@@ -59,8 +64,8 @@ public class Task {
 
     @Override
     public String toString() {
-        return "Task{" +
-                "name='" + name + '\'' +
+        return "TaskType='" + getTaskType() + '\'' +
+                ", name='" + name + '\'' +
                 ", status='" + status + '\'' +
                 ", description='" + description + '\'' +
                 ", id=" + id +
