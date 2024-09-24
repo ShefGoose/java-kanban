@@ -32,19 +32,19 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
         subtaskId = manager.addNewSubtask(subtask);
     }
 
-//    @Test
-//    void shouldSaveAndLoadTasks() {
-//        FileBackedTaskManager loadManager = FileBackedTaskManager.loadFromFile(dir);
-//        assertEquals(manager.getTasks(), loadManager.getTasks());
-//        assertEquals(manager.getEpics(), loadManager.getEpics());
-//        assertEquals(manager.getSubtasks(), loadManager.getSubtasks());
-//    }
-//
-//    @Test
-//    public void shouldLoadEmptyFile() {
-//        FileBackedTaskManager loadManager = FileBackedTaskManager.loadFromFile(otherDir);
-//        assertTrue(loadManager.getTasks().isEmpty());
-//        assertTrue(loadManager.getEpics().isEmpty());
-//        assertTrue(loadManager.getSubtasks().isEmpty());
-//    }
+    @Test
+    void shouldSaveAndLoadTasks() {
+        FileBackedTaskManager loadManager = FileBackedTaskManager.loadFromFile(dir);
+        assertEquals(manager.getTasks(), loadManager.getTasks());
+        assertEquals(manager.getEpics(), loadManager.getEpics());
+        assertEquals(manager.getSubtasks(), loadManager.getSubtasks());
+    }
+
+    @Test
+    public void shouldLoadEmptyFile() {
+        FileBackedTaskManager loadManager = FileBackedTaskManager.loadFromFile(otherDir);
+        assertTrue(loadManager.getTasks().isEmpty());
+        assertTrue(loadManager.getEpics().isEmpty());
+        assertTrue(loadManager.getSubtasks().isEmpty());
+    }
 }
