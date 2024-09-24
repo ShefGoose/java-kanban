@@ -2,13 +2,21 @@ package utility;
 
 import entity.*;
 
+import java.time.DateTimeException;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 public class ReformCSV {
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy, HH:mm");
     public static String toString(Task task) {
         String[] taskCSVFormat = {String.valueOf(task.getId()),
                 String.valueOf(task.getTaskType()),
                 task.getName(),
                 String.valueOf(task.getStatus()),
                 task.getDescription(),
+                String.valueOf(task.getDuration().getSeconds()/60),
+                task.getStartTime().format(DATE_TIME_FORMATTER),
                 getEpicId(task)
         };
         return String.join(",", taskCSVFormat);
@@ -25,13 +33,16 @@ public class ReformCSV {
         String[] taskFromString = value.split(",");
         if (taskFromString[1].equals(String.valueOf(TaskType.TASK))) {
             return new Task(taskFromString[2], Status.valueOf(taskFromString[3]), taskFromString[4],
-                    Integer.parseInt(taskFromString[0]));
+                    Integer.parseInt(taskFromString[0]), Duration.ofMinutes(Long.parseLong(taskFromString[5])),
+                    LocalDateTime.parse(taskFromString[6], DATE_TIME_FORMATTER));
         } else if (taskFromString[1].equals(String.valueOf(TaskType.EPIC))) {
             return new Epic(taskFromString[2], Status.valueOf(taskFromString[3]), taskFromString[4],
-                    Integer.parseInt(taskFromString[0]));
+                    Integer.parseInt(taskFromString[0]), Duration.ofMinutes(Long.parseLong(taskFromString[5])),
+                    LocalDateTime.parse(taskFromString[6], DATE_TIME_FORMATTER));
         } else {
             return new Subtask(taskFromString[2], Status.valueOf(taskFromString[3]), taskFromString[4],
-                    Integer.parseInt(taskFromString[0]), Integer.parseInt(taskFromString[5]));
+                    Integer.parseInt(taskFromString[0]), Duration.ofMinutes(Long.parseLong(taskFromString[5])),
+                    LocalDateTime.parse(taskFromString[6], DATE_TIME_FORMATTER),Integer.parseInt(taskFromString[5]));
         }
     }
 }

@@ -53,7 +53,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     private void save() {
         try (FileWriter writer = new FileWriter(file, StandardCharsets.UTF_8)) {
-            writer.write("id,type,name,status,description,epic\n");
+            writer.write("id,type,name,status,description,duration,startTime,epic\n");
             for (Task task : getTasks()) {
                 writer.write(ReformCSV.toString(task) + "\n");
             }
