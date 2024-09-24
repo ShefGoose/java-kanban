@@ -2,20 +2,21 @@ package utility;
 
 import entity.*;
 
-import java.time.DateTimeException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class ReformCSV {
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy, HH:mm");
+    private static final int secondsInMinute = 60;
+
     public static String toString(Task task) {
         String[] taskCSVFormat = {String.valueOf(task.getId()),
                 String.valueOf(task.getTaskType()),
                 task.getName(),
                 String.valueOf(task.getStatus()),
                 task.getDescription(),
-                String.valueOf(task.getDuration().getSeconds()/60),
+                String.valueOf(task.getDuration().getSeconds() / secondsInMinute),
                 task.getStartTime().format(DATE_TIME_FORMATTER),
                 getEpicId(task)
         };
@@ -42,7 +43,7 @@ public class ReformCSV {
         } else {
             return new Subtask(taskFromString[2], Status.valueOf(taskFromString[3]), taskFromString[4],
                     Integer.parseInt(taskFromString[0]), Duration.ofMinutes(Long.parseLong(taskFromString[5])),
-                    LocalDateTime.parse(taskFromString[6], DATE_TIME_FORMATTER),Integer.parseInt(taskFromString[5]));
+                    LocalDateTime.parse(taskFromString[6], DATE_TIME_FORMATTER), Integer.parseInt(taskFromString[5]));
         }
     }
 }
