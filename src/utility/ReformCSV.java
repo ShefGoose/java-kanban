@@ -11,15 +11,48 @@ public class ReformCSV {
     private static final int secondsInMinute = 60;
 
     public static String toString(Task task) {
-        String[] taskCSVFormat = {String.valueOf(task.getId()),
-                String.valueOf(task.getTaskType()),
-                task.getName(),
-                String.valueOf(task.getStatus()),
-                task.getDescription(),
-                String.valueOf(task.getDuration().getSeconds() / secondsInMinute),
-                task.getStartTime().format(DATE_TIME_FORMATTER),
-                getEpicId(task)
-        };
+        String[] taskCSVFormat;
+        if (task.getDuration() == null && task.getStartTime() == null) {
+             taskCSVFormat = new String[]{String.valueOf(task.getId()),
+                     String.valueOf(task.getTaskType()),
+                     task.getName(),
+                     String.valueOf(task.getStatus()),
+                     task.getDescription(),
+                     null,
+                     null,
+                     getEpicId(task),
+             };
+        } else if (task.getDuration() == null) {
+             taskCSVFormat = new String[]{String.valueOf(task.getId()),
+                     String.valueOf(task.getTaskType()),
+                     task.getName(),
+                     String.valueOf(task.getStatus()),
+                     task.getDescription(),
+                     null,
+                     task.getStartTime().format(DATE_TIME_FORMATTER),
+                     getEpicId(task),
+             };
+        } else if (task.getStartTime() == null) {
+            taskCSVFormat = new String[]{String.valueOf(task.getId()),
+                    String.valueOf(task.getTaskType()),
+                    task.getName(),
+                    String.valueOf(task.getStatus()),
+                    task.getDescription(),
+                    String.valueOf(task.getDuration().getSeconds() / secondsInMinute),
+                    null,
+                    getEpicId(task),
+            };
+        } else {
+             taskCSVFormat = new String[]{String.valueOf(task.getId()),
+                     String.valueOf(task.getTaskType()),
+                     task.getName(),
+                     String.valueOf(task.getStatus()),
+                     task.getDescription(),
+                     String.valueOf(task.getDuration().getSeconds() / secondsInMinute),
+                     task.getStartTime().format(DATE_TIME_FORMATTER),
+                     getEpicId(task),
+             };
+        }
         return String.join(",", taskCSVFormat);
     }
 
