@@ -36,7 +36,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 returnManager.addTask(task);
                 if (returnManager.getPrioritizedTasks().stream()
                         .noneMatch(priorTask -> returnManager.checkCrossTime(priorTask, task))) {
-                    returnManager.getPrioritizedTasks().add(task);
+                    returnManager.prioritizedTasks.add(task);
                 }
                 if (task.getId() > newGenerateId) {
                     newGenerateId = task.getId();
