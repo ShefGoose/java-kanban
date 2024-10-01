@@ -330,6 +330,10 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     protected boolean checkCrossTime(Task task1, Task task2) {
+        if (task2.getStartTime() == null || task2.getEndTime() == null || task1.getEndTime() == null
+                || task1.getStartTime() == null) {
+            return false;
+        }
         return !(task1.getStartTime().isAfter(task2.getEndTime()) || task1.getEndTime().isBefore(task2.getStartTime()));
     }
 }
