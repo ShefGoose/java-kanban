@@ -34,10 +34,14 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 String line = br.readLine();
                 Task task = ReformCSV.fromString(line);
                 returnManager.addTask(task);
-                if (returnManager.getPrioritizedTasks().stream()
+//                if (returnManager.getPrioritizedTasks().isEmpty() && task.getStartTime() != null) {
+//                    returnManager.prioritizedTasks.add(task);
+//                }
+                if (task.getStartTime() != null && returnManager.getPrioritizedTasks().stream()
                         .noneMatch(priorTask -> returnManager.checkCrossTime(priorTask, task))) {
                     returnManager.prioritizedTasks.add(task);
                 }
+
                 if (task.getId() > newGenerateId) {
                     newGenerateId = task.getId();
                     returnManager.generatorId = task.getId();
