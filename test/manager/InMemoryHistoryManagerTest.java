@@ -24,7 +24,8 @@ class InMemoryHistoryManagerTest {
         historyManager = Managers.getDefaultHistory();
         task = new Task("nameTask", Status.valueOf("NEW"), "descriptionTask", 1,
                 Duration.ofMinutes(10), LocalDateTime.of(2024, 9, 23, 14, 0));
-        epic = new Epic("nameEpic", Status.valueOf("NEW"), "descriptionEpic", 2);
+        epic = new Epic("nameEpic", Status.valueOf("NEW"), "descriptionEpic", 2, null,
+                null);
         subtask = new Subtask("nameSubtask", Status.valueOf("NEW"), "descriptionSubtask",
                 3, Duration.ofMinutes(20), LocalDateTime.of(2024, 9, 23, 15, 0),
                 epic.getId());

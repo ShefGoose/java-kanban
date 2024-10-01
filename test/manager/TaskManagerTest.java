@@ -5,6 +5,7 @@ import entity.Status;
 import entity.Subtask;
 import entity.Task;
 
+import exception.ManagerValidateException;
 import org.junit.jupiter.api.Test;
 
 
@@ -68,10 +69,13 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     void mustEqualTasksWithSameId() {
-        final Task taskUpdate = new Task("OtherName", Status.DONE, "OtherDescription", task.getId());
-        final Epic epicUpdate = new Epic("OtherName", Status.NEW, "OtherDescription", epic.getId());
+        final Task taskUpdate = new Task("OtherName", Status.DONE, "OtherDescription", task.getId(),
+                Duration.ofMinutes(20), LocalDateTime.of(2024, 9, 28, 15,0));
+        final Epic epicUpdate = new Epic("OtherName", Status.NEW, "OtherDescription", epic.getId(),
+                Duration.ofMinutes(10), LocalDateTime.of(2024, 9, 28, 16,0));
         final Subtask subtaskUpdate = new Subtask("OtherName",
-                Status.NEW, "OtherDescription", subtask.getId(), epic.getId());
+                Status.NEW, "OtherDescription", subtask.getId(),Duration.ofMinutes(15),
+                LocalDateTime.of(2024, 9, 28, 17,0), epic.getId());
         assertEquals(task, taskUpdate, "Задачи не совпадают");
         assertEquals(epic, epicUpdate, "Задачи не совпадают");
         assertEquals(subtask, subtaskUpdate, "Задачи не совпадают");
@@ -153,7 +157,6 @@ abstract class TaskManagerTest<T extends TaskManager> {
     void shouldDoNotAddTaskInPrioritizedTasksIfTaskTimeCrossAnotherTaskTime() {
         Task otherTask = new Task("otherTask", "OtherDescriptionTask", Duration.ofMinutes(30),
                 LocalDateTime.of(2024, 9, 23, 11,50));
-        int OtherTaskId = manager.addNewTask(otherTask);
-        assertEquals(3, manager.getPrioritizedTasks().size());
+        assertThrows(ManagerValidateException.class, () -> manager.addNewTask(otherTask));
     }
 }

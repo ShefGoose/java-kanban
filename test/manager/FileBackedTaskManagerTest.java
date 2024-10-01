@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -41,10 +42,16 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
     }
 
     @Test
-    public void shouldLoadEmptyFile() {
+    void shouldLoadEmptyFile() {
         FileBackedTaskManager loadManager = FileBackedTaskManager.loadFromFile(otherDir);
         assertTrue(loadManager.getTasks().isEmpty());
         assertTrue(loadManager.getEpics().isEmpty());
         assertTrue(loadManager.getSubtasks().isEmpty());
+    }
+
+    @Test
+    void shouldLoadPrioritizedTaskList() {
+        FileBackedTaskManager loadManager = FileBackedTaskManager.loadFromFile(dir);
+        assertEquals(List.of(task, epic, subtask), loadManager.getPrioritizedTasks());
     }
 }

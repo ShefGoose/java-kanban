@@ -8,7 +8,6 @@ import java.time.format.DateTimeFormatter;
 
 public class ReformCSV {
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
-    private static final int secondsInMinute = 60;
 
     public static String toString(Task task) {
         String[] taskCSVFormat;
@@ -38,7 +37,7 @@ public class ReformCSV {
                     task.getName(),
                     String.valueOf(task.getStatus()),
                     task.getDescription(),
-                    String.valueOf(task.getDuration().getSeconds() / secondsInMinute),
+                    String.valueOf(task.getDuration().toMinutes()),
                     null,
                     getEpicId(task),
             };
@@ -48,7 +47,7 @@ public class ReformCSV {
                     task.getName(),
                     String.valueOf(task.getStatus()),
                     task.getDescription(),
-                    String.valueOf(task.getDuration().getSeconds() / secondsInMinute),
+                    String.valueOf(task.getDuration().toMinutes()),
                     task.getStartTime().format(DATE_TIME_FORMATTER),
                     getEpicId(task),
             };
