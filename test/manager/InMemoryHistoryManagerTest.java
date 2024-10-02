@@ -22,11 +22,11 @@ class InMemoryHistoryManagerTest {
     @BeforeEach
     void beforeEach() {
         historyManager = Managers.getDefaultHistory();
-        task = new Task("nameTask", Status.valueOf("NEW"), "descriptionTask", 1,
+        task = new Task("nameTask","descriptionTask", 1,
                 Duration.ofMinutes(10), LocalDateTime.of(2024, 9, 23, 14, 0));
-        epic = new Epic("nameEpic", Status.valueOf("NEW"), "descriptionEpic", 2, null,
+        epic = new Epic("nameEpic","descriptionEpic", 2, null,
                 null);
-        subtask = new Subtask("nameSubtask", Status.valueOf("NEW"), "descriptionSubtask",
+        subtask = new Subtask("nameSubtask","descriptionSubtask",
                 3, Duration.ofMinutes(20), LocalDateTime.of(2024, 9, 23, 15, 0),
                 epic.getId());
     }
@@ -98,9 +98,10 @@ class InMemoryHistoryManagerTest {
                 LocalDateTime.of(2024, 9, 23, 14, 0));
         final int taskId = manager.addNewTask(task);
         historyManager.add(OtherTask);
-        Task taskUpdate = new Task("UpdateName", Status.valueOf("DONE"), "UpdateDescription",
+        Task taskUpdate = new Task("UpdateName","UpdateDescription",
                 taskId, Duration.ofMinutes(10),
                 LocalDateTime.of(2024, 9, 23, 14, 0));
+        taskUpdate.setStatus(Status.DONE);
         manager.updateTask(taskUpdate);
         assertEquals(historyManager.getHistory().getFirst().getStatus(), Status.NEW);
     }

@@ -11,33 +11,13 @@ public class ReformCSV {
 
     public static String toString(Task task) {
         String[] taskCSVFormat;
-        if (task.getDuration() == null && task.getStartTime() == null) {
+        if (task.getDuration() == null) {
             taskCSVFormat = new String[]{String.valueOf(task.getId()),
                     String.valueOf(task.getTaskType()),
                     task.getName(),
                     String.valueOf(task.getStatus()),
                     task.getDescription(),
                     null,
-                    null,
-                    getEpicId(task),
-            };
-        } else if (task.getDuration() == null) {
-            taskCSVFormat = new String[]{String.valueOf(task.getId()),
-                    String.valueOf(task.getTaskType()),
-                    task.getName(),
-                    String.valueOf(task.getStatus()),
-                    task.getDescription(),
-                    null,
-                    task.getStartTime().format(DATE_TIME_FORMATTER),
-                    getEpicId(task),
-            };
-        } else if (task.getStartTime() == null) {
-            taskCSVFormat = new String[]{String.valueOf(task.getId()),
-                    String.valueOf(task.getTaskType()),
-                    task.getName(),
-                    String.valueOf(task.getStatus()),
-                    task.getDescription(),
-                    String.valueOf(task.getDuration().toMinutes()),
                     null,
                     getEpicId(task),
             };
@@ -65,61 +45,45 @@ public class ReformCSV {
     public static Task fromString(String value) {
         String[] taskFromString = value.split(",");
         if (taskFromString[1].equals(String.valueOf(TaskType.TASK))) {
-            if (taskFromString[5] == null && taskFromString[6] == null) {
-                return new Task(taskFromString[2], Status.valueOf(taskFromString[3]), taskFromString[4],
+            Task task;
+            if (taskFromString[5] == null) {
+                task = new Task(taskFromString[2], taskFromString[4],
                         Integer.parseInt(taskFromString[0]), null,
-                        null);
-            } else if (taskFromString[5] == null) {
-                return new Task(taskFromString[2], Status.valueOf(taskFromString[3]), taskFromString[4],
-                        Integer.parseInt(taskFromString[0]), null,
-                        LocalDateTime.parse(taskFromString[6], DATE_TIME_FORMATTER));
-            } else if (taskFromString[6] == null) {
-                return new Task(taskFromString[2], Status.valueOf(taskFromString[3]), taskFromString[4],
-                        Integer.parseInt(taskFromString[0]), Duration.ofMinutes(Long.parseLong(taskFromString[5])),
                         null);
             } else {
-                return new Task(taskFromString[2], Status.valueOf(taskFromString[3]), taskFromString[4],
+                task = new Task(taskFromString[2], taskFromString[4],
                         Integer.parseInt(taskFromString[0]), Duration.ofMinutes(Long.parseLong(taskFromString[5])),
                         LocalDateTime.parse(taskFromString[6], DATE_TIME_FORMATTER));
             }
+            task.setStatus(Status.valueOf(taskFromString[3]));
+            return task;
         } else if (taskFromString[1].equals(String.valueOf(TaskType.EPIC))) {
-            if (taskFromString[5] == null && taskFromString[6] == null) {
-                return new Epic(taskFromString[2], Status.valueOf(taskFromString[3]), taskFromString[4],
+            Epic epic;
+            if (taskFromString[5] == null) {
+                epic = new Epic(taskFromString[2], taskFromString[4],
                         Integer.parseInt(taskFromString[0]), null,
-                        null);
-            } else if (taskFromString[5] == null) {
-                return new Epic(taskFromString[2], Status.valueOf(taskFromString[3]), taskFromString[4],
-                        Integer.parseInt(taskFromString[0]), null,
-                        LocalDateTime.parse(taskFromString[6], DATE_TIME_FORMATTER));
-            } else if (taskFromString[6] == null) {
-                return new Epic(taskFromString[2], Status.valueOf(taskFromString[3]), taskFromString[4],
-                        Integer.parseInt(taskFromString[0]), Duration.ofMinutes(Long.parseLong(taskFromString[5])),
                         null);
             } else {
-                return new Epic(taskFromString[2], Status.valueOf(taskFromString[3]), taskFromString[4],
+                epic = new Epic(taskFromString[2], taskFromString[4],
                         Integer.parseInt(taskFromString[0]), Duration.ofMinutes(Long.parseLong(taskFromString[5])),
                         LocalDateTime.parse(taskFromString[6], DATE_TIME_FORMATTER));
             }
+            epic.setStatus(Status.valueOf(taskFromString[3]));
+            return epic;
         } else {
-            if (taskFromString[5] == null && taskFromString[6] == null) {
-                return new Subtask(taskFromString[2], Status.valueOf(taskFromString[3]), taskFromString[4],
+            Subtask subtask;
+            if (taskFromString[5] == null) {
+                subtask = new Subtask(taskFromString[2], taskFromString[4],
                         Integer.parseInt(taskFromString[0]), null,
-                        null, Integer.parseInt(taskFromString[5]));
-            } else if (taskFromString[5] == null) {
-                return new Subtask(taskFromString[2], Status.valueOf(taskFromString[3]), taskFromString[4],
-                        Integer.parseInt(taskFromString[0]), null,
-                        LocalDateTime.parse(taskFromString[6], DATE_TIME_FORMATTER),
-                        Integer.parseInt(taskFromString[5]));
-            } else if (taskFromString[6] == null) {
-                return new Subtask(taskFromString[2], Status.valueOf(taskFromString[3]), taskFromString[4],
-                        Integer.parseInt(taskFromString[0]), Duration.ofMinutes(Long.parseLong(taskFromString[5])),
-                        null, Integer.parseInt(taskFromString[5]));
+                        null, Integer.parseInt(taskFromString[7]));
             } else {
-                return new Subtask(taskFromString[2], Status.valueOf(taskFromString[3]), taskFromString[4],
+                subtask = new Subtask(taskFromString[2], taskFromString[4],
                         Integer.parseInt(taskFromString[0]), Duration.ofMinutes(Long.parseLong(taskFromString[5])),
                         LocalDateTime.parse(taskFromString[6], DATE_TIME_FORMATTER),
-                        Integer.parseInt(taskFromString[5]));
+                        Integer.parseInt(taskFromString[7]));
             }
+            subtask.setStatus(Status.valueOf(taskFromString[3]));
+            return subtask;
         }
     }
 }

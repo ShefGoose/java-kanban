@@ -25,16 +25,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         }
     }
 
-    private Task getTask(Task task) {
-        if (task.getTaskType().equals(TaskType.EPIC)) {
-            return epics.get(task.getId());
-        } else if (task.getTaskType().equals(TaskType.SUBTASK)) {
-            return subtasks.get(task.getId());
-        } else {
-            return tasks.get(task.getId());
-        }
-    }
-
     public static FileBackedTaskManager loadFromFile(File file) {
         FileBackedTaskManager returnManager = new FileBackedTaskManager(file);
         try (BufferedReader br = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8))) {
@@ -45,8 +35,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 Task task = ReformCSV.fromString(line);
                 returnManager.addTask(task);
 
-                if (task.getStartTime() != null && returnManager.getPrioritizedTasks().stream()
-                        .noneMatch(priorTask -> returnManager.checkCrossTime(priorTask, returnManager.getTask(task)))) {
+                if (task.getStartTime() != null && !task.getTaskType().equals(TaskType.EPIC)) {
                     returnManager.prioritizedTasks.add(task);
                 }
 

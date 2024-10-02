@@ -69,12 +69,12 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     void mustEqualTasksWithSameId() {
-        final Task taskUpdate = new Task("OtherName", Status.DONE, "OtherDescription", task.getId(),
+        final Task taskUpdate = new Task("OtherName","OtherDescription", task.getId(),
                 Duration.ofMinutes(20), LocalDateTime.of(2024, 9, 28, 15,0));
-        final Epic epicUpdate = new Epic("OtherName", Status.NEW, "OtherDescription", epic.getId(),
+        final Epic epicUpdate = new Epic("OtherName","OtherDescription", epic.getId(),
                 Duration.ofMinutes(10), LocalDateTime.of(2024, 9, 28, 16,0));
-        final Subtask subtaskUpdate = new Subtask("OtherName",
-                Status.NEW, "OtherDescription", subtask.getId(),Duration.ofMinutes(15),
+        final Subtask subtaskUpdate = new Subtask("OtherName","OtherDescription",
+                subtask.getId(),Duration.ofMinutes(15),
                 LocalDateTime.of(2024, 9, 28, 17,0), epic.getId());
         assertEquals(task, taskUpdate, "Задачи не совпадают");
         assertEquals(epic, epicUpdate, "Задачи не совпадают");
