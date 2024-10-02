@@ -1,5 +1,7 @@
 package entity;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Task {
@@ -7,19 +9,24 @@ public class Task {
     protected Status status;
     protected String description;
     protected int id;
+    protected Duration duration;
+    protected LocalDateTime startTime;
 
-
-    public Task(String name, Status status, String description, int id) {
-        this.name = name;
-        this.status = status;
-        this.description = description;
+    public Task(String name, String description, int id, Duration duration, LocalDateTime startTime) {
+        this(name, description, duration, startTime);
         this.id = id;
     }
 
     public Task(String name, String description) {
+        this(name, description, null, null);
+    }
+
+    public Task(String name, String description, Duration duration, LocalDateTime startTime) {
         this.name = name;
-        this.status = Status.NEW;
         this.description = description;
+        this.status = Status.NEW;
+        this.duration = duration;
+        this.startTime = startTime;
     }
 
     public TaskType getTaskType() {
@@ -62,13 +69,38 @@ public class Task {
         return false;
     }
 
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public LocalDateTime getEndTime() {
+        if (startTime == null || duration == null) {
+            return null;
+        }
+        return startTime.plus(duration);
+    }
+
     @Override
     public String toString() {
-        return "TaskType='" + getTaskType() + '\'' +
+        return "TaskType={'" + getTaskType() + '\'' +
                 ", name='" + name + '\'' +
                 ", status='" + status + '\'' +
                 ", description='" + description + '\'' +
-                ", id=" + id +
+                ", id='" + id + '\'' +
+                ", duration='" + duration + '\'' +
+                ", startTime='" + startTime + '\'' +
                 '}';
     }
 

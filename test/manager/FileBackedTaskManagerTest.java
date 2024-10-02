@@ -8,39 +8,50 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class FileBackedTaskManagerTest {
-    private static FileBackedTaskManager fileBackedManager;
+class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
     private static File dir;
-
+    private static File otherDir;
 
     @BeforeEach
     void BeforeEach() throws IOException {
         dir = File.createTempFile("dataTest", ".txt");
-        fileBackedManager = new FileBackedTaskManager(dir);
+        otherDir = File.createTempFile("emptyFile", ".txt");
+        manager = new FileBackedTaskManager(dir);
+        task = new Task("nameTask", "descriptionTask", Duration.ofMinutes(10),
+                LocalDateTime.of(2024, 9, 23, 12,0));
+        taskId = manager.addNewTask(task);
+        epic = new Epic("nameEpic", "descriptionEpic");
+        epicId = manager.addNewEpic(epic);
+        subtask = new Subtask("nameSubtask", "descriptionSubtask",Duration.ofMinutes(20),
+                LocalDateTime.of(2024, 9, 23, 13,0), epicId);
+        subtaskId = manager.addNewSubtask(subtask);
     }
 
     @Test
     void shouldSaveAndLoadTasks() {
-        Task task = new Task("nameTask", "descriptionTask");
-        int taskId = fileBackedManager.addNewTask(task);
-        Epic epic = new Epic("nameEpic", "descriptionEpic");
-        int epicId = fileBackedManager.addNewEpic(epic);
-        Subtask subtask = new Subtask("nameSubtask", "descriptionSubtask", epicId);
-        int subtaskId = fileBackedManager.addNewSubtask(subtask);
         FileBackedTaskManager loadManager = FileBackedTaskManager.loadFromFile(dir);
-        assertEquals(fileBackedManager.getTasks(), loadManager.getTasks());
-        assertEquals(fileBackedManager.getEpics(), loadManager.getEpics());
-        assertEquals(fileBackedManager.getSubtasks(), loadManager.getSubtasks());
+        assertEquals(manager.getTasks(), loadManager.getTasks());
+        assertEquals(manager.getEpics(), loadManager.getEpics());
+        assertEquals(manager.getSubtasks(), loadManager.getSubtasks());
     }
 
     @Test
-    public void shouldLoadEmptyFile() {
-        FileBackedTaskManager loadManager = FileBackedTaskManager.loadFromFile(dir);
+    void shouldLoadEmptyFile() {
+        FileBackedTaskManager loadManager = FileBackedTaskManager.loadFromFile(otherDir);
         assertTrue(loadManager.getTasks().isEmpty());
         assertTrue(loadManager.getEpics().isEmpty());
         assertTrue(loadManager.getSubtasks().isEmpty());
+    }
+
+    @Test
+    void shouldLoadPrioritizedTaskList() {
+        FileBackedTaskManager loadManager = FileBackedTaskManager.loadFromFile(dir);
+        assertEquals(manager.getPrioritizedTasks(), loadManager.getPrioritizedTasks());
     }
 }

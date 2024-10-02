@@ -34,6 +34,11 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 String line = br.readLine();
                 Task task = ReformCSV.fromString(line);
                 returnManager.addTask(task);
+
+                if (task.getStartTime() != null && !task.getTaskType().equals(TaskType.EPIC)) {
+                    returnManager.prioritizedTasks.add(task);
+                }
+
                 if (task.getId() > newGenerateId) {
                     newGenerateId = task.getId();
                     returnManager.generatorId = task.getId();
@@ -42,7 +47,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             if (!returnManager.getSubtasks().isEmpty()) {
                 for (Subtask subtask : returnManager.getSubtasks()) {
                     Epic epic = returnManager.epics.get(subtask.getEpicId());
-                    epic.getSubtaskIds().add(subtask.getId());
+                    if (epic != null) {
+                        epic.getSubtaskIds().add(subtask.getId());
+                    }
                 }
             }
         } catch (IOException e) {
@@ -53,7 +60,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     private void save() {
         try (FileWriter writer = new FileWriter(file, StandardCharsets.UTF_8)) {
-            writer.write("id,type,name,status,description,epic\n");
+            writer.write("id,type,name,status,description,duration,startTime,epic\n");
             for (Task task : getTasks()) {
                 writer.write(ReformCSV.toString(task) + "\n");
             }
