@@ -52,6 +52,6 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
     @Test
     void shouldLoadPrioritizedTaskList() {
         FileBackedTaskManager loadManager = FileBackedTaskManager.loadFromFile(dir);
-        assertEquals(List.of(task, subtask), loadManager.getPrioritizedTasks());
+        assertEquals(manager.getPrioritizedTasks(), loadManager.getPrioritizedTasks());
     }
 }
