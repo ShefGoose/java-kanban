@@ -5,6 +5,7 @@ import entity.Subtask;
 import entity.Task;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public interface TaskManager {
@@ -49,4 +50,11 @@ public interface TaskManager {
     List<Task> getHistory();
 
     List<Task> getPrioritizedTasks();
+
+    HashMap<Integer, Task> getTaskList ();
+
+    HashMap<Integer, Epic> getEpicList ();
+
+    HashMap<Integer, Subtask> getSubtaskList ();
+
 }
