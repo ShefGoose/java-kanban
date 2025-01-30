@@ -33,7 +33,7 @@ public class HttpTaskServerTest {
     @BeforeEach
     public void setUp() {
         manager.deleteTasks();
-        manager.deleteSubtasks();
+        manager.deleteSubtasks();git
         manager.deleteEpics();
         taskServer.start();
     }
