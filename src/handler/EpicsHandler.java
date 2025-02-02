@@ -53,8 +53,8 @@ public class EpicsHandler extends BaseHttpHandler {
                                 .replaceAll("/subtasks", "");
                         int id = parsePathId(pathId);
                         if (taskManager.getEpicIdsList().contains(id)) {
-                            ArrayList<Subtask> listSubtasks = taskManager.
-                                    getEpicSubtasks(taskManager.getEpicNotHistory(id));
+                            ArrayList<Subtask> listSubtasks = taskManager
+                                    .getEpicSubtasks(taskManager.getEpicNotHistory(id));
                             if (listSubtasks.isEmpty()) {
                                 sendText(exchange, "Подзадач нет.", 404);
                             } else {
