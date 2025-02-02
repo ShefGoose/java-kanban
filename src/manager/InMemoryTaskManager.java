@@ -16,18 +16,18 @@ public class InMemoryTaskManager implements TaskManager {
     protected final HistoryManager historyManager = Managers.getDefaultHistory();
 
     @Override
-    public HashMap<Integer, Task> getTaskList() {
-        return tasks;
+    public Set<Integer> getTaskIdsList() {
+        return tasks.keySet();
     }
 
     @Override
-    public HashMap<Integer, Epic> getEpicList() {
-        return epics;
+    public Set<Integer> getEpicIdsList() {
+        return epics.keySet();
     }
 
     @Override
-    public HashMap<Integer, Subtask> getSubtaskList() {
-        return subtasks;
+    public Set<Integer> getSubtaskIdsList() {
+        return subtasks.keySet();
     }
 
     @Override
@@ -88,6 +88,11 @@ public class InMemoryTaskManager implements TaskManager {
             historyManager.add(epic);
         }
         return epic;
+    }
+
+    @Override
+    public Epic getEpicNotHistory(Integer id) {
+        return epics.get(id);
     }
 
     @Override

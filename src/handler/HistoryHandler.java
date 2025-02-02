@@ -8,7 +8,7 @@ import manager.TaskManager;
 import java.io.IOException;
 import java.util.regex.Pattern;
 
-public class HistoryHandler extends BaseHttpHandler implements HttpHandler {
+public class HistoryHandler extends BaseHttpHandler {
 
 
     public HistoryHandler(TaskManager taskManager, Gson gson) {
@@ -23,13 +23,9 @@ public class HistoryHandler extends BaseHttpHandler implements HttpHandler {
             String requestMethod = exchange.getRequestMethod();
             if (requestMethod.equals("GET")) {
                 if (Pattern.matches("^/history$", path)) {
-                    if (!taskManager.getHistory().isEmpty()) {
-                        send200(exchange, gson.toJson(taskManager.getHistory()));
-                    } else {
-                        send404(exchange, "История пуста.");
-                    }
+                    sendText(exchange, gson.toJson(taskManager.getHistory()), 200);
                 } else {
-                    send400(exchange, "Неизвестный путь.");
+                    sendText(exchange, "Неизвестный путь.", 400);
                 }
             } else {
                 exchange.sendResponseHeaders(405, 0);

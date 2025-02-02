@@ -8,8 +8,7 @@ import manager.TaskManager;
 import java.io.IOException;
 import java.util.regex.Pattern;
 
-public class PrioritizedHandler extends BaseHttpHandler implements HttpHandler {
-
+public class PrioritizedHandler extends BaseHttpHandler {
 
     public PrioritizedHandler(TaskManager taskManager, Gson gson) {
         super(taskManager, gson);
@@ -22,13 +21,9 @@ public class PrioritizedHandler extends BaseHttpHandler implements HttpHandler {
             String requestMethod = exchange.getRequestMethod();
             if (requestMethod.equals("GET")) {
                 if (Pattern.matches("^/prioritized$", path)) {
-                    if (!taskManager.getPrioritizedTasks().isEmpty()) {
-                        send200(exchange, gson.toJson(taskManager.getPrioritizedTasks()));
-                    } else {
-                        send404(exchange, "Список приоритетных задач пуст.");
-                    }
+                    sendText(exchange, gson.toJson(taskManager.getPrioritizedTasks()), 200);
                 } else {
-                    send400(exchange, "Неизвестный путь.");
+                    sendText(exchange, "Неизвестный путь.", 400);
                 }
             } else {
                 exchange.sendResponseHeaders(405, 0);

@@ -7,6 +7,7 @@ import entity.Task;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 public interface TaskManager {
     int addNewTask(Task task);
@@ -16,6 +17,8 @@ public interface TaskManager {
     Integer addNewSubtask(Subtask subtask);
 
     Epic getEpic(Integer id);
+
+    Epic getEpicNotHistory(Integer id);
 
     Task getTask(Integer id);
 
@@ -51,10 +54,10 @@ public interface TaskManager {
 
     List<Task> getPrioritizedTasks();
 
-    HashMap<Integer, Task> getTaskList();
+    Set<Integer> getTaskIdsList();
 
-    HashMap<Integer, Epic> getEpicList();
+    Set<Integer> getEpicIdsList();
 
-    HashMap<Integer, Subtask> getSubtaskList();
+    Set<Integer> getSubtaskIdsList();
 
 }

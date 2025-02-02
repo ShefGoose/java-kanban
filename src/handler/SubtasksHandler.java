@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public class SubtasksHandler extends BaseHttpHandler implements HttpHandler {
+public class SubtasksHandler extends BaseHttpHandler {
 
 
     public SubtasksHandler(TaskManager taskManager, Gson gson) {
@@ -30,9 +30,9 @@ public class SubtasksHandler extends BaseHttpHandler implements HttpHandler {
                     if (Pattern.matches("^/subtasks$", path)) {
                         List<Subtask> allTasks = taskManager.getSubtasks();
                         if (!allTasks.isEmpty()) {
-                            send200(exchange, gson.toJson(allTasks));
+                            sendText(exchange, gson.toJson(allTasks), 200);
                         } else {
-                            send404(exchange, "Список задач пуст.");
+                            sendText(exchange, "Список задач пуст.", 404);
                             break;
                         }
                     }
@@ -40,10 +40,10 @@ public class SubtasksHandler extends BaseHttpHandler implements HttpHandler {
                     if (Pattern.matches("^/subtasks/\\d+$", path)) {
                         String pathId = path.replaceFirst("/subtasks/", "");
                         int id = parsePathId(pathId);
-                        if (taskManager.getSubtask(id) != null) {
-                            send200(exchange, gson.toJson(taskManager.getSubtask(id)));
+                        if (taskManager.getSubtaskIdsList().contains(id)) {
+                            sendText(exchange, gson.toJson(taskManager.getSubtask(id)), 200);
                         } else {
-                            send404(exchange, "Задача с id:" + id + " не найдена.");
+                            sendText(exchange, "Задача с id: " + id + " не найдена.", 404);
                             break;
                         }
                     }
@@ -56,26 +56,26 @@ public class SubtasksHandler extends BaseHttpHandler implements HttpHandler {
                     try {
                         subtask = gson.fromJson(bodyTask, Subtask.class);
                         if (subtask.getName().isEmpty() || subtask.getDescription().isEmpty()) {
-                            send400(exchange, "Имя и описание задачи не могут быть пустыми.");
+                            sendText(exchange, "Имя и описание задачи не могут быть пустыми.", 400);
                             return;
                         }
                         if (!bodyTask.contains("status")) {
                             subtask.setStatus(Status.valueOf("NEW"));
 
                         }
-                        if (taskManager.getSubtaskList().containsKey(subtask.getId())) {
+                        if (taskManager.getSubtaskIdsList().contains(subtask.getId())) {
                             taskManager.updateSubtask(subtask);
-                            send201(exchange, "Задача с id: " + subtask.getId() + " обновлена.");
+                            sendText(exchange, "Задача с id: " + subtask.getId() + " обновлена.", 201);
                         } else {
                             taskManager.addNewSubtask(subtask);
-                            send201(exchange, "Задача добавлена в менеджер.");
+                            sendText(exchange, "Задача добавлена в менеджер.", 201);
                             break;
                         }
                     } catch (ManagerValidateException e) {
-                        send406(exchange, "Задача пересекается с уже существующей.");
+                        sendText(exchange, "Задача пересекается с уже существующей.", 406);
                         break;
                     } catch (JsonSyntaxException ex) {
-                        send400(exchange, "Неккоректный JSON.");
+                        sendText(exchange, "Неккоректный JSON.", 400);
                         break;
                     }
                 }
@@ -84,11 +84,11 @@ public class SubtasksHandler extends BaseHttpHandler implements HttpHandler {
                     if (Pattern.matches("^/subtasks/\\d+$", path)) {
                         String pathId = path.replaceFirst("/subtasks/", "");
                         int id = parsePathId(pathId);
-                        if (taskManager.getSubtask(id) != null) {
+                        if (taskManager.getSubtaskIdsList().contains(id)) {
                             taskManager.deleteSubtask(id);
-                            send200(exchange, "Задача с id: " + id + " удалена.");
+                            sendText(exchange, "Задача с id: " + id + " удалена.", 200);
                         } else {
-                            send400(exchange, "задача не найдена для удаления.");
+                            sendText(exchange, "задача не найдена для удаления.", 400);
                             break;
                         }
                     } else {

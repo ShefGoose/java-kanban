@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public class EpicsHandler extends BaseHttpHandler implements HttpHandler {
+public class EpicsHandler extends BaseHttpHandler {
 
     public EpicsHandler(TaskManager taskManager, Gson gson) {
         super(taskManager, gson);
@@ -31,9 +31,9 @@ public class EpicsHandler extends BaseHttpHandler implements HttpHandler {
                     if (Pattern.matches("^/epics$", path)) {
                         List<Epic> allEpics = taskManager.getEpics();
                         if (!allEpics.isEmpty()) {
-                            send200(exchange, gson.toJson(allEpics));
+                            sendText(exchange, gson.toJson(allEpics), 200);
                         } else {
-                            send404(exchange, "Список задач пуст.");
+                            sendText(exchange, "Список задач пуст.", 404);
                             break;
                         }
                     }
@@ -41,10 +41,10 @@ public class EpicsHandler extends BaseHttpHandler implements HttpHandler {
                     if (Pattern.matches("^/epics/\\d+$", path)) {
                         String pathId = path.replaceFirst("/epics/", "");
                         int id = parsePathId(pathId);
-                        if (taskManager.getEpic(id) != null) {
-                            send200(exchange, gson.toJson(taskManager.getEpic(id)));
+                        if (taskManager.getEpicIdsList().contains(id)) {
+                            sendText(exchange, gson.toJson(taskManager.getEpic(id)), 200);
                         } else {
-                            send404(exchange, "Задача с id:" + id + " не найдена.");
+                            sendText(exchange, "Задача с id: " + id + " не найдена.", 404);
                             break;
                         }
                     }
@@ -53,15 +53,16 @@ public class EpicsHandler extends BaseHttpHandler implements HttpHandler {
                         String pathId = path.replaceFirst("/epics/", "")
                                 .replaceAll("/subtasks", "");
                         int id = parsePathId(pathId);
-                        if (taskManager.getEpic(id) != null) {
-                            ArrayList<Subtask> listSubtasks = taskManager.getEpicSubtasks(taskManager.getEpic(id));
+                        if (taskManager.getEpicIdsList().contains(id)) {
+                            ArrayList<Subtask> listSubtasks = taskManager.
+                                    getEpicSubtasks(taskManager.getEpicNotHistory(id));
                             if (listSubtasks.isEmpty()) {
-                                send404(exchange, "Подзадач нет.");
+                                sendText(exchange, "Подзадач нет.", 404);
                             } else {
-                                send200(exchange, gson.toJson(listSubtasks));
+                                sendText(exchange, gson.toJson(listSubtasks), 200);
                             }
                         } else {
-                            send404(exchange, "Задача с id:" + id + " не найдена.");
+                            sendText(exchange, "Задача с id: " + id + " не найдена.", 404);
                             break;
                         }
                     }
@@ -74,7 +75,7 @@ public class EpicsHandler extends BaseHttpHandler implements HttpHandler {
                     try {
                         epic = gson.fromJson(bodyEpic, Epic.class);
                         if (epic.getName().isEmpty() || epic.getDescription().isEmpty()) {
-                            send400(exchange, "Имя и описание задачи не могут быть пустыми.");
+                            sendText(exchange, "Имя и описание задачи не могут быть пустыми.", 400);
                             return;
                         }
                         if (epic.getSubtaskIds() == null) {
@@ -84,19 +85,19 @@ public class EpicsHandler extends BaseHttpHandler implements HttpHandler {
                             epic.setStatus(Status.valueOf("NEW"));
 
                         }
-                        if (taskManager.getEpicList().containsKey(epic.getId())) {
+                        if (taskManager.getEpicIdsList().contains(epic.getId())) {
                             taskManager.updateEpic(epic);
-                            send201(exchange, "Задача с id: " + epic.getId() + " обновлена.");
+                            sendText(exchange, "Задача с id: " + epic.getId() + " обновлена.", 201);
                         } else {
                             taskManager.addNewEpic(epic);
-                            send201(exchange, "Задача добавлена в менеджер.");
+                            sendText(exchange, "Задача добавлена в менеджер.", 201);
                             break;
                         }
                     } catch (ManagerValidateException e) {
-                        send406(exchange, "Задача пересекается с уже существующей.");
+                        sendText(exchange, "Задача пересекается с уже существующей.", 406);
                         break;
                     } catch (JsonSyntaxException ex) {
-                        send400(exchange, "Неккоректный JSON.");
+                        sendText(exchange, "Неккоректный JSON.", 400);
                         break;
                     }
                 }
@@ -106,11 +107,11 @@ public class EpicsHandler extends BaseHttpHandler implements HttpHandler {
                     if (Pattern.matches("^/epics/\\d+$", path)) {
                         String pathId = path.replaceFirst("/epics/", "");
                         int id = parsePathId(pathId);
-                        if (taskManager.getEpic(id) != null) {
+                        if (taskManager.getEpicIdsList().contains(id)) {
                             taskManager.deleteEpic(id);
-                            send200(exchange, "Задача с id: " + id + " удалена.");
+                            sendText(exchange, "Задача с id: " + id + " удалена.", 200);
                         } else {
-                            send400(exchange, "Задача не найдена для удаления.");
+                            sendText(exchange, "Задача не найдена для удаления.", 400);
                             break;
                         }
                     } else {

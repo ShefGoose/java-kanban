@@ -14,40 +14,20 @@ public class HttpTaskServer {
     private HttpServer server;
     private Gson gson;
     private TaskManager taskManager;
-    private TasksHandler tasksHandler;
-    private EpicsHandler epicsHandler;
-    private SubtasksHandler subtasksHandler;
-    private HistoryHandler historyHandler;
 
-    public TaskManager getTaskManager() {
-        return taskManager;
-    }
-
-    public Gson getGson() {
-        return gson;
-    }
-
-    private PrioritizedHandler prioritizedHandler;
-
-    public HttpTaskServer() throws IOException {
-        taskManager = Managers.getDefault();
+    public HttpTaskServer(TaskManager manager) throws IOException {
+        this.taskManager = manager;
         gson = Managers.getGson();
         server = HttpServer.create(new InetSocketAddress("localhost", PORT), 0);
-        tasksHandler = new TasksHandler(taskManager, gson);
-        epicsHandler = new EpicsHandler(taskManager, gson);
-        subtasksHandler = new SubtasksHandler(taskManager, gson);
-        historyHandler = new HistoryHandler(taskManager, gson);
-        prioritizedHandler = new PrioritizedHandler(taskManager, gson);
-
-        server.createContext("/tasks", tasksHandler);
-        server.createContext("/epics", epicsHandler);
-        server.createContext("/subtasks", subtasksHandler);
-        server.createContext("/history", historyHandler);
-        server.createContext("/prioritized", prioritizedHandler);
+        server.createContext("/tasks", new TasksHandler(taskManager, gson));
+        server.createContext("/epics", new EpicsHandler(taskManager, gson));
+        server.createContext("/subtasks", new SubtasksHandler(taskManager, gson));
+        server.createContext("/history", new HistoryHandler(taskManager, gson));
+        server.createContext("/prioritized", new PrioritizedHandler(taskManager, gson));
     }
 
     public static void main(String[] args) throws IOException {
-        HttpTaskServer httpServer = new HttpTaskServer();
+        HttpTaskServer httpServer = new HttpTaskServer(Managers.getDefault());
         httpServer.start();
         httpServer.stop();
     }
