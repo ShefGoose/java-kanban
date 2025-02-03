@@ -39,7 +39,8 @@ public class SubtasksHandler extends BaseHttpHandler {
                     if (Pattern.matches("^/subtasks/\\d+$", path)) {
                         String pathId = path.replaceFirst("/subtasks/", "");
                         int id = parsePathId(pathId);
-                        if (taskManager.getSubtaskIdsList().contains(id)) {
+                        Subtask subtask = taskManager.getSubtask(id);
+                        if (subtask != null) {
                             sendText(exchange, gson.toJson(taskManager.getSubtask(id)), 200);
                         } else {
                             sendText(exchange, "Задача с id: " + id + " не найдена.", 404);
@@ -62,7 +63,7 @@ public class SubtasksHandler extends BaseHttpHandler {
                             subtask.setStatus(Status.valueOf("NEW"));
 
                         }
-                        if (taskManager.getSubtaskIdsList().contains(subtask.getId())) {
+                        if (subtask.getId() != 0) {
                             taskManager.updateSubtask(subtask);
                             sendText(exchange, "Задача с id: " + subtask.getId() + " обновлена.", 201);
                         } else {
@@ -83,13 +84,8 @@ public class SubtasksHandler extends BaseHttpHandler {
                     if (Pattern.matches("^/subtasks/\\d+$", path)) {
                         String pathId = path.replaceFirst("/subtasks/", "");
                         int id = parsePathId(pathId);
-                        if (taskManager.getSubtaskIdsList().contains(id)) {
-                            taskManager.deleteSubtask(id);
-                            sendText(exchange, "Задача с id: " + id + " удалена.", 200);
-                        } else {
-                            sendText(exchange, "задача не найдена для удаления.", 400);
-                            break;
-                        }
+                        taskManager.deleteSubtask(id);
+                        sendText(exchange, "Задача с id: " + id + " удалена.", 200);
                     } else {
                         exchange.sendResponseHeaders(405, 0);
                     }

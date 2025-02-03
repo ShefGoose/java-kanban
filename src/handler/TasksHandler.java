@@ -39,8 +39,9 @@ public class TasksHandler extends BaseHttpHandler {
                     if (Pattern.matches("^/tasks/\\d+$", path)) {
                         String pathId = path.replaceFirst("/tasks/", "");
                         int id = parsePathId(pathId);
-                        if (taskManager.getTaskIdsList().contains(id)) {
-                            sendText(exchange, gson.toJson(taskManager.getTask(id)), 200);
+                        Task task = taskManager.getTask(id);
+                        if (task != null) {
+                            sendText(exchange, gson.toJson(task), 200);
                         } else {
                             sendText(exchange, "Задача с id: " + id + " не найдена.", 404);
                             break;
@@ -62,7 +63,7 @@ public class TasksHandler extends BaseHttpHandler {
                             task.setStatus(Status.valueOf("NEW"));
 
                         }
-                        if (taskManager.getTaskIdsList().contains(task.getId())) {
+                        if (task.getId() != 0) {
                             taskManager.updateTask(task);
                             sendText(exchange, "Задача с id: " + task.getId() + " обновлена.", 201);
                         } else {
@@ -83,13 +84,8 @@ public class TasksHandler extends BaseHttpHandler {
                     if (Pattern.matches("^/tasks/\\d+$", path)) {
                         String pathId = path.replaceFirst("/tasks/", "");
                         int id = parsePathId(pathId);
-                        if (taskManager.getTaskIdsList().contains(id)) {
-                            taskManager.deleteTask(id);
-                            sendText(exchange, "Задача с id: " + id + " удалена.", 200);
-                        } else {
-                            sendText(exchange, "Задача не найдена для удаления.", 400);
-                            break;
-                        }
+                        sendText(exchange, "Задача с id: " + id + " удалена.", 200);
+                        break;
                     } else {
                         exchange.sendResponseHeaders(405, 0);
                     }
